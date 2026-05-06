@@ -1,0 +1,170 @@
+:root {
+    --gold: #C5A059;
+    --dark: #050505;
+    --navy: #001F3F;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--dark);
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Glassmorphism */
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
+}
+
+/* Navigation Links */
+.nav-link {
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Product Card Effects */
+.product-card {
+    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+}
+
+/* Hero Light Streaks Animation */
+#hero-light-streaks {
+    background: radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 70%);
+    overflow: hidden;
+}
+
+#hero-light-streaks::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: transparent;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
+    background-size: 100px 100px;
+    animation: floating-dust 60s linear infinite;
+}
+
+@keyframes floating-dust {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-100px, -100px) rotate(360deg); }
+}
+
+/* Cinematic Reflection on Watch */
+.watch-reflection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Cursor Styles */
+#cursor, #cursor-follower {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    #cursor, #cursor-follower {
+        display: block;
+    }
+}
+
+/* Watch Face Hands Animation */
+#hand-hour {
+    animation: rotate 43200s linear infinite;
+}
+
+#hand-minute {
+    animation: rotate 3600s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: translateY(-100%) rotate(0deg); }
+    to { transform: translateY(-100%) rotate(360deg); }
+}
+
+/* Light Sweep Animation */
+@keyframes sweep {
+    0% { transform: translateX(-100%) skewX(-12deg); }
+    100% { transform: translateX(200%) skewX(-12deg); }
+}
+
+#hero-watch:hover #light-sweep {
+    animation: sweep 1.5s ease-in-out;
+}
+
+/* Parallax Effect */
+.parallax {
+    will-change: transform;
+}
+
+/* Lens Smooth Scroll helper */
+html.lenis {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+    pointer-events: none;
+}

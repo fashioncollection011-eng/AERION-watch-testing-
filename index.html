@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETERNA | Time Redefined</title>
+    <meta name="description" content="Experience the pinnacle of luxury horology. Aeterna watches - where cinematic design meets timeless precision.">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxury: {
+                            gold: '#C5A059',
+                            dark: '#050505',
+                            navy: '#001F3F',
+                            glass: 'rgba(255, 255, 255, 0.05)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-luxury-dark text-white overflow-x-hidden selection:bg-luxury-gold selection:text-black">
+
+    <!-- Custom Cursor -->
+    <div id="cursor" class="fixed w-4 h-4 bg-luxury-gold rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block"></div>
+    <div id="cursor-follower" class="fixed w-10 h-10 border border-luxury-gold rounded-full pointer-events-none z-[9998] transition-transform duration-300 ease-out hidden md:block"></div>
+
+    <!-- Preloader -->
+    <div id="loader" class="fixed inset-0 z-[10000] bg-black flex flex-col items-center justify-center">
+        <div class="overflow-hidden mb-4">
+            <h1 class="text-4xl font-display tracking-[0.5em] uppercase translate-y-full loader-text">Aeterna</h1>
+        </div>
+        <div class="w-48 h-[1px] bg-white/10 relative overflow-hidden">
+            <div id="loader-bar" class="absolute top-0 left-0 h-full bg-luxury-gold w-0"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-[100] px-6 md:px-12 py-8 flex justify-between items-center transition-all duration-500" id="navbar">
+        <div class="flex-1 hidden md:flex gap-8 text-xs uppercase tracking-widest font-medium">
+            <a href="#" class="nav-link hover:text-luxury-gold transition-colors">Collection</a>
+            <a href="#" class="nav-link hover:text-luxury-gold transition-colors">Heritage</a>
+        </div>
+        <div class="flex-shrink-0">
+            <a href="/" class="text-2xl font-display tracking-[0.3em] uppercase">Aeterna</a>
+        </div>
+        <div class="flex-1 flex justify-end gap-8 text-xs uppercase tracking-widest font-medium">
+            <a href="#" class="nav-link hover:text-luxury-gold transition-colors hidden md:block">Boutiques</a>
+            <button class="nav-link hover:text-luxury-gold transition-colors flex items-center gap-2" id="cart-trigger">
+                Cart (0)
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main data-lenis-prevent-touch>
+        <!-- Hero Section -->
+        <section class="relative h-screen w-full flex items-center justify-center overflow-hidden" id="hero">
+            <!-- Cinematic Background Video -->
+            <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-30">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-luxury-watch-2374-large.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-luxury-navy/10 to-luxury-dark z-[1]"></div>
+            <div id="hero-light-streaks" class="absolute inset-0 z-[1]"></div>
+            
+            <div class="relative z-10 text-center">
+                <div class="overflow-hidden mb-2">
+                    <span class="block text-luxury-gold text-sm tracking-[0.4em] uppercase opacity-0 hero-sub">Excellence in Motion</span>
+                </div>
+                <div class="overflow-hidden">
+                    <h1 class="text-6xl md:text-9xl font-display tracking-tight uppercase leading-none opacity-0 hero-title">
+                        Time <br> <span class="text-luxury-gold italic">Redefined</span>
+                    </h1>
+                </div>
+                <div class="mt-12 opacity-0 hero-cta">
+                    <button class="group relative px-10 py-4 bg-transparent border border-white/20 hover:border-luxury-gold transition-colors duration-500 overflow-hidden">
+                        <span class="relative z-10 text-xs tracking-[0.3em] uppercase">Explore Collection</span>
+                        <div class="absolute inset-0 bg-luxury-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Floating Watch Visual -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[600px] pointer-events-none z-[5]" id="hero-watch-container">
+                <!-- Using an SVG placeholder for high-end look without external assets -->
+                <div class="w-full h-full flex items-center justify-center opacity-0" id="hero-watch">
+                    <div class="relative w-80 h-80 rounded-full border-4 border-luxury-gold/30 shadow-[0_0_100px_rgba(197,160,89,0.1)] flex items-center justify-center overflow-hidden glassmorphism">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-luxury-navy/40 to-transparent"></div>
+                        <!-- Watch Face Design -->
+                        <div class="relative w-[90%] h-[90%] rounded-full bg-[#0a0a0a] border border-white/10 flex items-center justify-center">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-[1px] h-[40%] bg-luxury-gold absolute origin-bottom -translate-y-full rotate-[45deg]" id="hand-hour"></div>
+                                <div class="w-[1px] h-[60%] bg-white absolute origin-bottom -translate-y-full rotate-[120deg]" id="hand-minute"></div>
+                            </div>
+                            <div class="w-2 h-2 rounded-full bg-luxury-gold z-10 shadow-[0_0_10px_#C5A059]"></div>
+                        </div>
+                    </div>
+                    <!-- Cinematic Light Sweeps -->
+                    <div class="absolute top-0 left-0 w-full h-full pointer-events-none bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-[-100%]" id="light-sweep"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Grid Section -->
+        <section class="py-32 px-6 md:px-12 bg-luxury-dark" id="collection">
+            <div class="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-display uppercase tracking-wider mb-4">The Collection</h2>
+                    <p class="text-white/50 max-w-md">Each piece is a testament to our dedication to craftsmanship, precision, and the art of timekeeping.</p>
+                </div>
+                <div class="flex gap-4">
+                    <button class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:border-luxury-gold transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+                    <button class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:border-luxury-gold transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <!-- Product Card 1 -->
+                <div class="group product-card">
+                    <div class="relative aspect-[4/5] bg-[#0a0a0a] overflow-hidden mb-6">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop" alt="Luxury Watch" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20">
+                            <button class="px-8 py-3 bg-white text-black text-xs tracking-[0.2em] uppercase font-bold hover:bg-luxury-gold hover:text-white transition-colors">Quick View</button>
+                        </div>
+                        <div class="absolute top-6 right-6 z-20">
+                            <button class="wishlist-btn text-white/50 hover:text-luxury-gold transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-display uppercase tracking-widest mb-1">Celestial Gold</h3>
+                            <p class="text-xs text-white/40 uppercase tracking-tighter">Automatic • 42mm</p>
+                        </div>
+                        <span class="text-luxury-gold font-medium">$12,500</span>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="group product-card">
+                    <div class="relative aspect-[4/5] bg-[#0a0a0a] overflow-hidden mb-6">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1000&auto=format&fit=crop" alt="Luxury Watch" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20">
+                            <button class="px-8 py-3 bg-white text-black text-xs tracking-[0.2em] uppercase font-bold hover:bg-luxury-gold hover:text-white transition-colors">Quick View</button>
+                        </div>
+                        <div class="absolute top-6 right-6 z-20">
+                            <button class="wishlist-btn text-white/50 hover:text-luxury-gold transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-display uppercase tracking-widest mb-1">Deep Sea Navigator</h3>
+                            <p class="text-xs text-white/40 uppercase tracking-tighter">Chronograph • 44mm</p>
+                        </div>
+                        <span class="text-luxury-gold font-medium">$8,900</span>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="group product-card">
+                    <div class="relative aspect-[4/5] bg-[#0a0a0a] overflow-hidden mb-6">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=1000&auto=format&fit=crop" alt="Luxury Watch" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20">
+                            <a href="https://watchfactorys.cartpe.in/" target="_blank" class="px-8 py-3 bg-white text-black text-xs tracking-[0.2em] uppercase font-bold hover:bg-luxury-gold hover:text-white transition-colors text-center">View on Store</a>
+                        </div>
+                        <div class="absolute top-6 right-6 z-20">
+                            <button class="wishlist-btn text-white/50 hover:text-luxury-gold transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-display uppercase tracking-widest mb-1">Obsidian Onyx</h3>
+                            <p class="text-xs text-white/40 uppercase tracking-tighter">Manual • 40mm</p>
+                        </div>
+                        <span class="text-luxury-gold font-medium">$15,200</span>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 (CartPe Placeholder) -->
+                <div class="group product-card">
+                    <div class="relative aspect-[4/5] bg-[#0a0a0a] overflow-hidden mb-6">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1548171915-e7c5ec0003cd?q=80&w=1000&auto=format&fit=crop" alt="Luxury Watch" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20">
+                            <a href="https://watchfactorys.cartpe.in/" target="_blank" class="px-8 py-3 bg-white text-black text-xs tracking-[0.2em] uppercase font-bold hover:bg-luxury-gold hover:text-white transition-colors text-center">View on Store</a>
+                        </div>
+                        <div class="absolute top-6 right-6 z-20">
+                            <button class="wishlist-btn text-white/50 hover:text-luxury-gold transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-display uppercase tracking-widest mb-1">Aeterna Spectre</h3>
+                            <p class="text-xs text-white/40 uppercase tracking-tighter">Automatic • 42mm</p>
+                        </div>
+                        <span class="text-luxury-gold font-medium">$9,500</span>
+                    </div>
+                </div>
+
+                <!-- Product Card 5 (CartPe Placeholder) -->
+                <div class="group product-card">
+                    <div class="relative aspect-[4/5] bg-[#0a0a0a] overflow-hidden mb-6">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=1000&auto=format&fit=crop" alt="Luxury Watch" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20">
+                            <a href="https://watchfactorys.cartpe.in/" target="_blank" class="px-8 py-3 bg-white text-black text-xs tracking-[0.2em] uppercase font-bold hover:bg-luxury-gold hover:text-white transition-colors text-center">View on Store</a>
+                        </div>
+                        <div class="absolute top-6 right-6 z-20">
+                            <button class="wishlist-btn text-white/50 hover:text-luxury-gold transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-display uppercase tracking-widest mb-1">Oceanic Silver</h3>
+                            <p class="text-xs text-white/40 uppercase tracking-tighter">Chronograph • 45mm</p>
+                        </div>
+                        <span class="text-luxury-gold font-medium">$7,200</span>
+                    </div>
+                </div>
+
+                <!-- Product Card 6 (CartPe Placeholder) -->
+                <div class="group product-card">
+                    <div class="relative aspect-[4/5] bg-[#0a0a0a] overflow-hidden mb-6">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1619134769032-e9d758303449?q=80&w=1000&auto=format&fit=crop" alt="Luxury Watch" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20">
+                            <a href="https://watchfactorys.cartpe.in/" target="_blank" class="px-8 py-3 bg-white text-black text-xs tracking-[0.2em] uppercase font-bold hover:bg-luxury-gold hover:text-white transition-colors text-center">View on Store</a>
+                        </div>
+                        <div class="absolute top-6 right-6 z-20">
+                            <button class="wishlist-btn text-white/50 hover:text-luxury-gold transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-display uppercase tracking-widest mb-1">Midnight Rose</h3>
+                            <p class="text-xs text-white/40 uppercase tracking-tighter">Automatic • 38mm</p>
+                        </div>
+                        <span class="text-luxury-gold font-medium">$11,800</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Section: The Craft -->
+        <section class="py-32 bg-[#080808] relative overflow-hidden">
+            <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
+                <div class="w-full md:w-1/2 overflow-hidden rounded-lg shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1000&auto=format&fit=crop" alt="Watch Craftsmanship" class="w-full object-cover scale-110" id="craft-img">
+                </div>
+                <div class="w-full md:w-1/2">
+                    <h4 class="text-luxury-gold uppercase tracking-[0.3em] text-xs mb-4">Uncompromising Standards</h4>
+                    <h2 class="text-4xl md:text-6xl font-display uppercase mb-8 leading-tight">Mastery in Every Detail</h2>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <span class="w-6 h-6 rounded-full border border-luxury-gold flex items-center justify-center text-[10px] text-luxury-gold flex-shrink-0 mt-1">01</span>
+                            <div>
+                                <h5 class="text-lg font-medium mb-1 uppercase tracking-wider">Sapphire Glass</h5>
+                                <p class="text-white/40 text-sm">Ultra-durable, scratch-resistant crystal that remains clear for generations.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="w-6 h-6 rounded-full border border-luxury-gold flex items-center justify-center text-[10px] text-luxury-gold flex-shrink-0 mt-1">02</span>
+                            <div>
+                                <h5 class="text-lg font-medium mb-1 uppercase tracking-wider">Premium Steel</h5>
+                                <p class="text-white/40 text-sm">Forged from aerospace-grade 316L stainless steel for ultimate resilience.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="w-6 h-6 rounded-full border border-luxury-gold flex items-center justify-center text-[10px] text-luxury-gold flex-shrink-0 mt-1">03</span>
+                            <div>
+                                <h5 class="text-lg font-medium mb-1 uppercase tracking-wider">In-house Movement</h5>
+                                <p class="text-white/40 text-sm">Precisely calibrated automatic calibers with a 72-hour power reserve.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter / Footer -->
+        <footer class="py-32 px-6 bg-black border-t border-white/5">
+            <div class="max-w-6xl mx-auto text-center">
+                <h2 class="text-3xl md:text-5xl font-display uppercase mb-8">Join the Inner Circle</h2>
+                <p class="text-white/40 mb-12 max-w-lg mx-auto">Be the first to experience our limited editions and exclusive releases.</p>
+                <form class="flex flex-col md:flex-row gap-4 max-w-xl mx-auto mb-24">
+                    <input type="email" placeholder="Email Address" class="flex-1 bg-white/5 border border-white/10 px-6 py-4 text-sm focus:border-luxury-gold outline-none transition-colors">
+                    <button class="bg-white text-black px-10 py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-luxury-gold hover:text-white transition-colors">Subscribe</button>
+                </form>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-left border-t border-white/5 pt-16">
+                    <div>
+                        <h6 class="text-xs uppercase tracking-widest text-luxury-gold mb-6">Collections</h6>
+                        <ul class="text-xs space-y-4 text-white/50">
+                            <li><a href="#" class="hover:text-white">Heritage</a></li>
+                            <li><a href="#" class="hover:text-white">Performance</a></li>
+                            <li><a href="#" class="hover:text-white">Special Editions</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h6 class="text-xs uppercase tracking-widest text-luxury-gold mb-6">Company</h6>
+                        <ul class="text-xs space-y-4 text-white/50">
+                            <li><a href="#" class="hover:text-white">Our Story</a></li>
+                            <li><a href="#" class="hover:text-white">Craftsmanship</a></li>
+                            <li><a href="#" class="hover:text-white">Sustainability</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h6 class="text-xs uppercase tracking-widest text-luxury-gold mb-6">Service</h6>
+                        <ul class="text-xs space-y-4 text-white/50">
+                            <li><a href="#" class="hover:text-white">Maintenance</a></li>
+                            <li><a href="#" class="hover:text-white">Warranty</a></li>
+                            <li><a href="#" class="hover:text-white">Store Locator</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h6 class="text-xs uppercase tracking-widest text-luxury-gold mb-6">Legal</h6>
+                        <ul class="text-xs space-y-4 text-white/50">
+                            <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                            <li><a href="#" class="hover:text-white">Terms of Use</a></li>
+                            <li><a href="#" class="hover:text-white">Cookies</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-24 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] text-white/30 uppercase tracking-[0.3em]">
+                    <p>© 2026 AETERNA GENEVE. All Rights Reserved.</p>
+                    <div class="flex gap-8">
+                        <a href="#" class="hover:text-luxury-gold transition-colors">Instagram</a>
+                        <a href="#" class="hover:text-luxury-gold transition-colors">YouTube</a>
+                        <a href="#" class="hover:text-luxury-gold transition-colors">X</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 w-full md:w-[450px] h-full bg-luxury-dark z-[1000] translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.175,1)] border-l border-white/5">
+        <div class="p-12 h-full flex flex-col">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-2xl font-display uppercase tracking-widest">Your Cart</h2>
+                <button id="cart-close" class="text-white/50 hover:text-white uppercase text-[10px] tracking-widest">Close</button>
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-center text-center opacity-50">
+                <svg class="w-12 h-12 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                <p class="text-sm uppercase tracking-widest">Your collection is empty</p>
+                <button class="mt-8 text-luxury-gold uppercase text-[10px] tracking-widest border-b border-luxury-gold pb-1">Shop Latest</button>
+            </div>
+            <div class="pt-8 border-t border-white/5">
+                <div class="flex justify-between items-center mb-8">
+                    <span class="text-sm uppercase tracking-widest text-white/50">Subtotal</span>
+                    <span class="text-xl font-display">$0.00</span>
+                </div>
+                <button class="w-full bg-white text-black py-5 text-xs font-bold uppercase tracking-[0.2em] hover:bg-luxury-gold hover:text-white transition-colors disabled:opacity-50" disabled>Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div id="quick-view" class="fixed inset-0 z-[2000] hidden items-center justify-center p-6 bg-black/90 backdrop-blur-xl">
+        <div class="relative w-full max-w-5xl bg-luxury-dark border border-white/10 rounded-2xl overflow-hidden flex flex-col md:flex-row h-[80vh]">
+            <button id="close-modal" class="absolute top-6 right-6 z-50 text-white/50 hover:text-white">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            
+            <div class="w-full md:w-1/2 bg-[#0a0a0a] relative overflow-hidden flex items-center justify-center p-12">
+                <div class="absolute inset-0 bg-gradient-to-tr from-luxury-navy/20 to-transparent"></div>
+                <img id="modal-img" src="" alt="Product" class="max-w-full max-h-full object-contain relative z-10 transition-transform duration-700">
+                <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+                    <div class="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                    <div class="w-2 h-2 rounded-full bg-white/20"></div>
+                    <div class="w-2 h-2 rounded-full bg-white/20"></div>
+                </div>
+                <div class="absolute inset-0 watch-reflection opacity-30"></div>
+            </div>
+            
+            <div class="w-full md:w-1/2 p-12 flex flex-col justify-center">
+                <h4 class="text-luxury-gold uppercase tracking-[0.3em] text-xs mb-2" id="modal-series">Heritage Series</h4>
+                <h2 class="text-4xl font-display uppercase mb-4" id="modal-title">Celestial Gold</h2>
+                <p class="text-2xl text-white font-light mb-8" id="modal-price">$12,500</p>
+                <p class="text-white/40 text-sm mb-12 leading-relaxed" id="modal-desc">
+                    The Celestial Gold represents the peak of our automatic collection. Featuring a handcrafted movement and 18k rose gold detailing, it is a statement of elegance and precision.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-8 mb-12">
+                    <div>
+                        <h6 class="text-[10px] uppercase tracking-widest text-white/30 mb-2">Crystal</h6>
+                        <p class="text-xs">Sapphire Glass</p>
+                    </div>
+                    <div>
+                        <h6 class="text-[10px] uppercase tracking-widest text-white/30 mb-2">Water Resistance</h6>
+                        <p class="text-xs">100 Meters</p>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-white text-black py-5 text-xs font-bold uppercase tracking-[0.2em] hover:bg-luxury-gold hover:text-white transition-colors">Add to Collection</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
